@@ -1,5 +1,5 @@
 [package]
-name = "save_file_analysis"
+name = "freeciv-savefile-viewer"
 version = "0.1.0"
 authors = ["W <git@worik.org>"]
 edition = "2018"
