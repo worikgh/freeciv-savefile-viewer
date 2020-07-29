@@ -122,7 +122,7 @@ fn main() -> io::Result<()> {
     let re_player_n = Regex::new(r"\[player(\d+)\]$").unwrap();
     let re_terrain =  Regex::new(r"t\d{4}=.(.+).$").unwrap();
     let re_xysize = Regex::new(r"([xy])size.,(\d+),(\d+)$").unwrap();
-    let re_cities = Regex::new(r"^dc=").unwrap();
+    let re_cities = Regex::new(r"^c=").unwrap();
     let re_units = Regex::new(r"^u=").unwrap();
     let re_colour = Regex::new(r"^color.([rgb])=(\d+)$").unwrap();
     let re_blankline = Regex::new(r"^[ \t]*$").unwrap();
@@ -239,13 +239,13 @@ fn main() -> io::Result<()> {
 		}
 		let v:Vec<String> = line.split(",").
 		    map(|x| x.to_string()).collect();
-		assert!(v.len() > 1);
 		println!("v.len() {} Line: '{}'", v.len(), line);
+		assert!(v.len() > 37);
 		cities.push((v[1].parse::<usize>().unwrap(), // x
 			     v[0].parse::<usize>().unwrap(), // y
 			     format!("rgb({}, {}, {})",
 				     colour_r, colour_g, colour_b),
-			     v[12].to_string(), // Name
+			     v[36].to_string(), // Name
 		));
 	    }
 	}
