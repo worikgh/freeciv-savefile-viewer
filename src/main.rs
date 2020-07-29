@@ -81,9 +81,9 @@ fn svg_unit(x:f64, y:f64, big_r:f64, colour:&String, t:&String) -> String {
 		_ => _default_unit(x, y, unit_diameter, colour, t),
 	    })
 }
-fn svg_city(x:f64, y:f64, big_r:f64, colour:&String) -> String {
-    format!("<circle  cx='{}' cy='{}' r='{}'  stroke='black' fill='{}' stroke-width='1'/>\n",
-	    x, y, big_r*0.33333, colour)
+fn svg_city(x:f64, y:f64, big_r:f64, colour:&str, name:&str) -> String {
+    format!("<circle  cx='{}' cy='{}' r='{}'  stroke='black' fill='{}' stroke-width='1'/>\n <text x='{}' y='{}'> {} </text>",
+	    x, y, big_r*0.33333, colour, x, y, name)
 }
 fn main() -> io::Result<()> {
 
@@ -240,10 +240,13 @@ fn main() -> io::Result<()> {
 		let v:Vec<String> = line.split(",").
 		    map(|x| x.to_string()).collect();
 		assert!(v.len() > 1);
+		println!("v.len() {} Line: '{}'", v.len(), line);
 		cities.push((v[1].parse::<usize>().unwrap(), // x
 			     v[0].parse::<usize>().unwrap(), // y
 			     format!("rgb({}, {}, {})",
-				     colour_r, colour_g, colour_b)));
+				     colour_r, colour_g, colour_b),
+			     v[12].to_string(), // Name
+		));
 	    }
 	}
     }
@@ -341,8 +344,9 @@ fn main() -> io::Result<()> {
 	// The x/y coordinates in game space and the players colour
 	let x = c.0;
 	let y = c.1;
-	let colour = c.2;
-
+	let colour = &c.2;
+	let name = &c.3;
+	
 	// Convert coordinates to hexagon/SVG space
 	let x = if x % 2 == 1 {
 	    // x is odd
@@ -353,7 +357,7 @@ fn main() -> io::Result<()> {
 	let y = (y as f64 + 1.0) * r;
 
 	// Get svg city
-	let city = svg_city(x, y, big_r, &colour);
+	let city = svg_city(x, y, big_r, colour.as_str(), name.as_str());
 	svg += city.as_str();
     }
 
